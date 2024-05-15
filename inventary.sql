@@ -1,6 +1,6 @@
 -- Crear la tabla de Usuario
 CREATE TABLE Usuario (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
+    idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     Nombre VARCHAR(50),
     Correo VARCHAR(100),
     Contrasenia VARCHAR(100)
@@ -13,13 +13,13 @@ INSERT INTO Usuario (Nombre, Correo, Contrasenia) VALUES
 
 -- Crear la tabla de Producto
 CREATE TABLE Producto (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
+    idProducto INT PRIMARY KEY AUTO_INCREMENT,
     Nombre VARCHAR(100),
     Descripcion TEXT,
     Precio DECIMAL(10, 2),
     CantidadEnStock INT,
     Usuario_ID INT,
-    FOREIGN KEY (Usuario_ID) REFERENCES Usuario(ID)
+    FOREIGN KEY (Usuario_ID) REFERENCES Usuario(idUsuario)
 );
 
 -- Insertar algunos datos de ejemplo en la tabla de Producto
@@ -29,14 +29,14 @@ INSERT INTO Producto (Nombre, Descripcion, Precio, CantidadEnStock, Usuario_ID) 
 
 -- Crear la tabla de Movimiento
 CREATE TABLE Movimiento (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
+    idMovimiento INT PRIMARY KEY AUTO_INCREMENT,
     FechaHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     TipoMovimiento ENUM('entrada', 'salida'),
     Cantidad INT,
     Producto_ID INT,
     Usuario_ID INT,
-    FOREIGN KEY (Producto_ID) REFERENCES Producto(ID),
-    FOREIGN KEY (Usuario_ID) REFERENCES Usuario(ID)
+    FOREIGN KEY (Producto_ID) REFERENCES Producto(idProducto),
+    FOREIGN KEY (Usuario_ID) REFERENCES Usuario(idUsuario)
 );
 
 -- Insertar algunos datos de ejemplo en la tabla de Movimiento

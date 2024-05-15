@@ -23,20 +23,22 @@
    } 
    function imprimir_footer() 
    {
-      echo "<br><br><center><p>Copyright " . date('Y') . ". Aula Mentor cumple al 100% las directrices de protección de datos del GDPR.<br>";
-      echo "Lee nuestra Política de Privacidad para entender cómo recogemos, almacenamos y procesamos tu información privada según el GDPR.";
-      echo "</p><br>" . boton_ficticio("Logout", "index.php?logout") . "</center>";
+      boton_ficticio("Logout", "index.php?logout");
             
-      echo "</BODY></HTML>";
+
    }
 
    function boton_ficticio($caption,$url)
    {
-      return "<TABLE border=1 CELLSPACING=0 CELLPADDING=3 bgcolor=black>
-                           <TR><TD bgcolor='white'>
-                              <FONT size ='-1' face='arial, helvetica'><a href = '$url'>$caption</A></FONT>
-                           </TD></TR></TABLE>";
-   } // end funcion boton_fictio
+      return "<a href = '$url' class='btn btn-primary'>$caption</A>";
+
+   } 
+
+   function boton_peligroso($caption,$url)
+   {
+      return "<a href = '$url' class='btn btn-danger'>$caption</A>";
+
+   }
 
    function conectar_BD() 
    {

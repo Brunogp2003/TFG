@@ -62,19 +62,22 @@ if (isset($_POST['login'])) {
   if (($nombre == '') or ($passw == '')) {
       die ("<BR><BR><center>El nombre/password no deben ser vacíos.</center>");
   }
-  $consulta = "SELECT Nombre, Contrasenia FROM Usuario WHERE Nombre='$nombre'";
+  $consulta = "SELECT idUsuario, Nombre, Contrasenia FROM Usuario WHERE Nombre='$nombre'";
   $resultado = ejecuta_SQL($consulta);
   if ($resultado->rowCount() > 0) {
-      $fila = $resultado->fetch(PDO::FETCH_ASSOC);
-      $hash_guardado = $fila['Contrasenia'];
-      if (password_verify($passw, $hash_guardado)) {
-          session_start();
-          $_SESSION['num_user'] = $nombre; // Guarda el nombre de usuario en la sesión
-          $host = $_SERVER['HTTP_HOST'];
-          $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-          $extra = 'inicio.php';
-          header("Location: http://$host$uri/$extra");
-          exit();
+      $matriz = $resultado->fetchAll();
+      foreach ($matriz as $myrow) {    
+        // Guarda los valores de myrow con variables
+        list($idUser, $nombre, $password) = $myrow;
+      }
+      if (password_verify($passw, $password)) {
+        session_start();
+        $host = $_SERVER['HTTP_HOST'];
+        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $extra = "inicio.php"; // Pasar el ID del usuario en la URL
+        header("Location: http://$host$uri/$extra");
+        exit();
+    
       } else {
           echo "<BR><BR>El usuario o la contraseña no son correctos<br><br>";
       }
@@ -99,7 +102,7 @@ if (isset($_POST['register'])) {
     if ($resultado->rowCount() > 0) {
         echo "<BR><BR><center>El usuario ya se encuentra registrado. Elija otro.</center>";
     } else {
-        $consulta = "INSERT INTO Usuario (Nombre, Correo, Contrasenia) VALUES ('$nombre', '$correo', '$hass')";
+        $consulta = "INSERT INTO Usuario (idUsuario,Nombre, Correo, Contrasenia) VALUES ('$idUser','$nombre', '$correo', '$hass')";
         $resultado = ejecuta_SQL($consulta);
         session_start();
         $_SESSION['num_user'] = $nombre; // Guarda el nombre de usuario en la sesión    
