@@ -40,63 +40,76 @@
 <div>
 <?php
 require("funciones.php");
-// Mantenemos la sesión
 session_start();
 
-// Si la sesión no existe te vuelve a enviar al index que es el login
-if (!isset($_SESSION['num_user'])) {
-    $host  = $_SERVER['HTTP_HOST'];
-    $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    $extra = 'login.php';
-    header("Location: http://$host$uri/$extra");
-    exit; // Importante: terminamos el script después de redirigir
+// Controlamos que la sesión sigue activa
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
 }
-$idUser =$_SESSION['user_id'];
-// Conectamos base de datos
+
+// Manejo del cierre de sesión
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+// Conexión a la base de datos
 conectar_BD(); 
-// Seleccionamos el login y la contraseña de los usuarios donde el num_usuario es el mismo que el de la sesión
-$consulta = "SELECT * FROM Usuario WHERE idUsuario = $idUser  ";
-// Almacenamos la info de la consulta
+
+// Obtenemos el ID de usuario de la sesión
+$idUser = $_SESSION['user_id'];
+
+// Seleccionamos los productos asociados a este usuario
+$consulta = "SELECT idProducto, Nombre, Descripcion, precio, CantidadEnStock FROM Producto WHERE Usuario_ID = $idUser";
 $resultado = ejecuta_SQL($consulta);
-foreach ($resultado as $myrow) {    
-    // Guarda los valores de myrow con variables
-    $idUser = $myrow[0];
-}
-// Si obtiene más de una fila
-if ($resultado->rowCount() > 0) {
-    // Seleccionamos todo de la tabla Producto
-    $consulta = "SELECT Producto.idProducto, Producto.Nombre, Producto.Descripcion, Producto.precio, Producto.CantidadEnStock, Producto.Usuario_ID FROM Producto, Usuario where Usuario_ID = $idUser ";
-    // Obtenemos lo que ejecuta la consulta    
-    $resultado = ejecuta_SQL($consulta);
-    // Lo metemos en un array
-    $matriz = $resultado->fetchAll();
-    echo "<TABLE BORDER='0' cellspacing='1' cellpadding='1' width='80%' align='center'>
-            <TR><th bgcolor='black'><FONT color='white' face='arial, helvetica'>Nombre</FONT></th>
-                <th bgcolor='black'><FONT color='white' face='arial, helvetica'>Descripción</FONT></th>
-                <th bgcolor='black'><FONT color='white' face='arial, helvetica'>Precio</FONT></th>
-                <th bgcolor='black'><FONT color='white' face='arial, helvetica'>Cantidad en Stock</FONT></th>
-                <th bgcolor='black'><FONT color='white' face='arial, helvetica'>Operaciones</FONT></th>
-            </TR>";
-    foreach ($matriz as $myrow) {    
-        // Guarda los valores de myrow con variables
-        list($numProducto, $nombreProducto, $Descripcion, $precio, $CantidadEnStock, $Usuario_ID) = $myrow;
-        // Imprime los datos en una tabla
-        echo "<TR>
-                <TD align='center'>$nombreProducto</TD>
-                <TD align='left'>&nbsp;&nbsp;$Descripcion</TD>
-                <TD align='left'>&nbsp;&nbsp;$precio</TD>
-                <TD align='center'>$CantidadEnStock</TD>
-                <TD align='center'>" . boton_ficticio("Ver", "producto.php?num_producto=$numProducto"). boton_peligroso("Eliminar", "borrar.php?num_producto=$numProducto")."</TD> ";
+
+// Verificamos si hay productos asociados al usuario
+if ($resultado && $resultado->rowCount() > 0) {
+    echo "<table BORDER='0' cellspacing='1' cellpadding='1' width='80%' align='center'>
+            <tr><th bgcolor='black'><font color='white' face='arial, helvetica'>Nombre</font></th>
+                <th bgcolor='black'><font color='white' face='arial, helvetica'>Descripción</font></th>
+                <th bgcolor='black'><font color='white' face='arial, helvetica'>Precio</font></th>
+                <th bgcolor='black'><font color='white' face='arial, helvetica'>Cantidad en Stock</font></th>
+                <th bgcolor='black'><font color='white' face='arial, helvetica'>Operaciones</font></th>
+            </tr>";
+    foreach ($resultado as $row) {    
+        // Guardamos los valores en variables
+        $numProducto = $row['idProducto'];
+        $nombreProducto = $row['Nombre'];
+        $descripcion = $row['Descripcion'];
+        $precio = $row['precio'];
+        $cantidad = $row['CantidadEnStock'];
+        // Imprimimos los datos en la tabla
+        echo "<tr>
+                <td align='center'>$nombreProducto</td>
+                <td align='left'>&nbsp;&nbsp;$descripcion</td>
+                <td align='left'>&nbsp;&nbsp;$precio</td>
+                <td align='center'>$cantidad</td>
+                <td align='center'>" . boton_ficticio("Ver", "producto.php?num_producto=$numProducto"). boton_peligroso("Eliminar", "borrar.php?num_producto=$numProducto")."</td> ";
     }
-    echo "</table><BR><CENTER>";
-    // Botón que pone nuevo mensaje y te lleva a responder.php
-    echo boton_ficticio('Nuevo producto','AnadirProducto.php');boton_ficticio("Logout", "index.html") ;
-    echo "</CENTER>";
-} else { // No hay ningún mensaje
-    echo "<br><br><center><h3>No hay mensajes que mostrar</h3><br><br><a href='index.php'>Vuelva a Intentarlo</a></center>";
+    echo "</table><br><center>";
+    // Botón para agregar un nuevo producto
+    echo boton_ficticio('Nuevo producto','AnadirProducto.php');
+    echo '<form method="post" action="">
+        <center>
+            <button type="submit" name="logout">Logout</button>
+        </center>
+    </form>';
+    echo "</center>";
+} else { // No hay ningún producto asociado al usuario
+    echo "<br><br><center><h3>No hay productos que mostrar</h3><br><br>";
+    echo boton_ficticio('Nuevo producto','AnadirProducto.php');
+    echo '<form method="post" action="">
+        <center>
+            <button type="submit" name="logout">Logout</button>
+        </center>
+    </form>';
+    echo "</center>";
 }
-imprimir_footer();
 ?>
+
 </div>
 
 </body>

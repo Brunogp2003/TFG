@@ -27,6 +27,16 @@
             
 
    }
+   function boton_logut($caption,$url,$name)
+   {
+      if (isset($_POST['logout'])) {
+         session_destroy();
+         header("Location: login.php");
+         exit;
+     }
+      return "<a href = '$url' name= '$name' class='btn btn-primary'>$caption</A>";
+
+   } 
 
    function boton_ficticio($caption,$url)
    {
