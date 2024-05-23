@@ -31,7 +31,7 @@
    {
       if (isset($_POST['logout'])) {
          session_destroy();
-         header("Location: login.php");
+         header("Location: index.html");
          exit;
      }
       return "<a href = '$url' name= '$name' class='btn btn-primary'>$caption</A>";

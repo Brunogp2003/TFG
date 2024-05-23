@@ -7,9 +7,7 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./help-documentation/css/main.css">
-<style>
-/* Custom CSS styles can go here */
-</style>
+<link rel="shortcut icon" type="image/png" href="assets/img/logo.png">
 </head>
 <body>
 

@@ -7,10 +7,10 @@
 	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
-	<title>Contact</title>
+	<title>Single Product</title>
 
 	<!-- favicon -->
-	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="assets/img/logo.png">
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -31,16 +31,16 @@
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
 	<style>
-        .header {
-    background-color: orange;
-    padding-left: 100px;
-    display: block;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 999; /* Asegura que el encabezado esté por encima de otros elementos */
-	}
-	</style>
+		.header {
+			background-color: orange;
+			padding-left: 100px;
+			display: block;
+			position: fixed;
+			width: 100%;
+			top: 0;
+			z-index: 999; /* Asegura que el encabezado esté por encima de otros elementos */
+		}
+		</style>
 </head>
 <body>
 	
@@ -52,8 +52,6 @@
     </div>
     <!--PreLoader Ends-->
 	
-	<!-- header -->
-
 	<div class="header" background-color ="orange">
 		<div class="row">
 			<div class="col-lg-12 col-sm-12 text-center">
@@ -96,68 +94,108 @@
 		</div>
 	</div>
 </div>
-<!-- end header -->	
-	
-	<!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
+
+	<!-- single product -->
+	<div class="single-product mt-150 mb-150" style="padding-top: 150px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<div class="single-product-img">
+						<img src="assets/img/plan 2.jpg" alt="">
+					</div>
+				</div>
+				<div class="col-md-7">
+					<div class="single-product-content">
+						<h3>Medio</h3>
+						<p class="single-product-pricing"><span></span> 75€</p>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta sint dignissimos, rem commodi cum voluptatem quae reprehenderit repudiandae ea tempora incidunt ipsa, quisquam animi perferendis eos eum modi! Tempora, earum.</p>
+						<div id="paypal-button-container" style="width: 300px;margin: 0 auto;text-align: center;"></div>
+						<script src="https://www.paypal.com/sdk/js?client-id=AaMgH_nCtPyTOCUM7b-dFyotH_3Sxm4FduKqKUvgwkuLU74kgMPHFzglMwg27CsmRoJ2b4P2emzuPx5H"></script>
+						<script>
+							paypal.Buttons({
+								style: {
+									color: 'blue',
+									shape: 'pill',
+									label: 'pay'
+								},
+								createOrder: function(data, actions) {
+									return actions.order.create({
+										purchase_units: [{
+											amount: {
+												value: "<?php echo $total; ?>"
+											}
+										}]
+									});
+								},
+								onApprove: function(data, actions) {
+									var url = 'login.php';
+									return actions.order.capture().then(function(detalles) {
+										console.log(detalles);
+										return fetch(url, {
+											method: 'POST',
+											headers: {
+												'content-type': 'application/json'
+											},
+											body: JSON.stringify({
+												detalles: detalles
+											})
+										});
+									}).then(function(response) {
+										window.location.href = 'login.php';
+									});
+								},
+								onCancel: function(data) {
+									Swal.fire({
+										icon: 'error',
+										title: 'Pago Cancelado',
+										showConfirmButton: false,
+										timer: 1500
+									});
+								}
+							}).render('#paypal-button-container');
+							</script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end single product -->
+
+	<!-- more products -->
+	<div class="more-products mb-150">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<h1>Contactar</h1>
+					<div class="section-title">	
+						<h3><span class="orange-text">Productos </span> Relacionados</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-6 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="assets/img/plan 3.jpg" alt=""></a>
+						</div>
+						<h3>Gratis</h3>
+						<p class="product-price"><span>Gratis </span> 0€ </p>
+						<a href="single-product.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Comprar</a>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="assets/img/plan 1.jpg" alt=""></a>
+						</div>
+						<h3>Vip</h3>
+						<p class="product-price"><span>Grandes empresas</span> 150€ </p>
+						<a href="single-product2.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Comprar</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- end breadcrumb section -->
-
-	<!-- contact form -->
-	<div class="contact-from-section mt-150 mb-150">
-		<div class="container">
-			<div class="row">
-				
-					<div class="col-lg-4">
-						<div class="contact-form-box">
-							<h4><i class="fas fa-map"></i> Oficinas</h4>
-							<p>Algeciras <br> España <br> </p>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="contact-form-box">
-							<h4><i class="far fa-clock"></i> Atención</h4>
-							<p>Lunes - Viernes: 8AM hasta 9 PM <br> Sabados - Dominos: 10 AM hasta 8 PM </p>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="contact-form-box">
-							<h4><i class="fas fa-address-book"></i> Contacto</h4>
-							<p>Phone: 737864123 <br> Email: stocker@gmail.com</p>
-						</div>
-					</div>
-			</div>
-		</div>
-	</div>
-	<!-- end contact form -->
-
-	<!-- find our location -->
-	<div class="find-location blue-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<p> <i class="fas fa-map-marker-alt"></i> Ubicación</p>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end find our location -->
-
-	<!-- google map section -->
-	<div class="embed-responsive embed-responsive-21by9">
-		<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.603063689356!2d-5.447417184835238!3d36.14074867959154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0c9a631b9e4897%3A0xc2b38b70fa8d58a9!2sAlgeciras%2C%20C%C3%A1diz%2C%20Spain!5e0!3m2!1sen!2sbd!4v1626808207604!5m2!1sen!2sbd" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" class="embed-responsive-item"></iframe>
-	</div>
-	<!-- end google map section -->
-
+	<!-- end more products -->
 
 	<!-- footer -->
 	<div class="footer-area">
@@ -171,7 +209,7 @@
 				</div>
 				<div class="col-lg-4 col-md-1" style="padding-left: 150px;">
 					<div class="footer-box get-in-touch">
-						<h2 class="widget-title">Contacto</h2>
+						<h2 class="widget-title">Contactar</h2>
 						<ul>
 							<li>stocker@gmail.com</li>
 							<li>733 454 394</li>
@@ -192,6 +230,8 @@
 		</div>
 	</div>
 	
+
+	
 	<!-- jquery -->
 	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
@@ -210,8 +250,6 @@
 	<script src="assets/js/jquery.meanmenu.min.js"></script>
 	<!-- sticker js -->
 	<script src="assets/js/sticker.js"></script>
-	<!-- form validation js -->
-	<script src="assets/js/form-validate.js"></script>
 	<!-- main js -->
 	<script src="assets/js/main.js"></script>
 	

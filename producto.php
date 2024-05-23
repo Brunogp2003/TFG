@@ -73,7 +73,7 @@ if ($resultado && $resultado->rowCount() > 0) {
 // Generar y mostrar el código de barras para el producto actual
 $generator = new barcode_generator();
 header('Content-Type: image/svg+xml');
-$svg = $generator->render_svg("qr", "producto.php?num_producto=$numProducto","");
+$svg = $generator->render_svg("qr", "https://www.youtube.com/watch?v=xpVfcZ0ZcFM&list=RDL1gfUsW6FwU&index=19","");
 echo $svg;
 
 ?>

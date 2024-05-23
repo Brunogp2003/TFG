@@ -10,7 +10,7 @@
 	<title>Inventario</title>
 
 	<!-- favicon -->
-	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="assets/img/logo.png">
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -31,11 +31,19 @@
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
 
+	<!-- JQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body background="orange">
-<br><br>
+<body style="background: orange;">
+
 <!-- Cabecera fija -->
-<CENTER><h1>Stocker</h1><CENTER>
+<CENTER><h1>Stocker</h1></CENTER>
+<!-- Buscador -->
+<center>
+    <form>
+        <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterTable()">
+    </form>
+</center>
 <br><br>
 <div>
 <?php
@@ -67,7 +75,7 @@ $resultado = ejecuta_SQL($consulta);
 
 // Verificamos si hay productos asociados al usuario
 if ($resultado && $resultado->rowCount() > 0) {
-    echo "<table BORDER='0' cellspacing='1' cellpadding='1' width='80%' align='center'>
+    echo "<table id='productTable' BORDER='0' cellspacing='1' cellpadding='1' width='80%' align='center'>
             <tr><th bgcolor='black'><font color='white' face='arial, helvetica'>Nombre</font></th>
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Descripción</font></th>
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Precio</font></th>
@@ -82,10 +90,10 @@ if ($resultado && $resultado->rowCount() > 0) {
         $precio = $row['precio'];
         $cantidad = $row['CantidadEnStock'];
         // Imprimimos los datos en la tabla
-        echo "<tr>
-                <td align='center'>$nombreProducto</td>
-                <td align='left'>&nbsp;&nbsp;$descripcion</td>
-                <td align='left'>&nbsp;&nbsp;$precio</td>
+        echo "<tr class='productRow'>
+                <td align='center' class='productName'>$nombreProducto</td>
+                <td align='left' class='productDescription'>&nbsp;&nbsp;$descripcion</td>
+                <td align='left' class='productPrice'>&nbsp;&nbsp;$precio</td>
                 <td align='center'>$cantidad</td>
                 <td align='center'>" . boton_ficticio("Ver", "producto.php?num_producto=$numProducto"). boton_peligroso("Eliminar", "borrar.php?num_producto=$numProducto")."</td> ";
     }
@@ -109,7 +117,36 @@ if ($resultado && $resultado->rowCount() > 0) {
     echo "</center>";
 }
 ?>
-
 </div>
 
+<script>
+function filterTable() {
+    // Obtener el valor de búsqueda
+    let input = document.getElementById('searchInput');
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById('productTable');
+    let rows = table.getElementsByClassName('productRow');
+
+    // Iterar sobre todas las filas de la tabla y ocultar las que no coinciden con la búsqueda
+    for (let i = 0; i < rows.length; i++) {
+        let nameCell = rows[i].getElementsByClassName('productName')[0];
+        let descCell = rows[i].getElementsByClassName('productDescription')[0];
+        let priceCell = rows[i].getElementsByClassName('productPrice')[0];
+
+        let nameText = nameCell.textContent || nameCell.innerText;
+        let descText = descCell.textContent || descCell.innerText;
+        let priceText = priceCell.textContent || priceCell.innerText;
+
+        if (nameText.toLowerCase().indexOf(filter) > -1 || 
+            descText.toLowerCase().indexOf(filter) > -1 ||
+            priceText.toLowerCase().indexOf(filter) > -1) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+}
+</script>
+
 </body>
+</html>
