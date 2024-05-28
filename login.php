@@ -60,23 +60,31 @@ if (isset($_POST['login'])) {
   if (($nombre == '') or ($passw == '')) {
       die ("<BR><BR><center>El nombre/password no deben ser vacíos.</center>");
   }
-  $consulta = "SELECT idUsuario, Nombre, Contrasenia FROM Usuario WHERE Nombre='$nombre' ";
+  $consulta = "SELECT idUsuario, Nombre, Contrasenia, Rol FROM Usuario WHERE Nombre='$nombre' ";
   $resultado = ejecuta_SQL($consulta);
   if ($resultado->rowCount() > 0) {
       $matriz = $resultado->fetchAll();
       foreach ($matriz as $myrow) {    
         // Guarda los valores de myrow con variables
-        list($idUser, $nombre, $password) = $myrow;
+        list($idUser, $nombre, $password, $rol) = $myrow;
       }
-      if (password_verify($passw, $password)) {
+      if (password_verify($passw, $password) && $rol == "user" ) {
         session_start();
         $_SESSION['user_id'] = $idUser;
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-        $extra = "inicio.php"; // Pasar el ID del usuario en la URL
+        $extra = "inicio.php"; 
         header("Location: http://$host$uri/$extra");
         exit();
     
+      } elseif (password_verify($passw, $password) && $rol == "admin")  {
+        session_start();
+        $_SESSION['user_id'] = $idUser;
+        $host = $_SERVER['HTTP_HOST'];
+        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $extra = "inicioAdmin.php"; 
+        header("Location: http://$host$uri/$extra");
+        exit();
       } else {
           echo "<BR><BR>El usuario o la contraseña no son correctos<br><br>";
       }
@@ -84,7 +92,6 @@ if (isset($_POST['login'])) {
       echo "<BR><BR>El usuario o la contraseña no son correctos<br><br>";
   }
 }
-
 
 // Comprobación y manejo del registro de usuario
 if (isset($_POST['register'])) {
@@ -101,10 +108,11 @@ if (isset($_POST['register'])) {
     if ($resultado->rowCount() > 0) {
         echo "<BR><BR><center>El usuario ya se encuentra registrado. Elija otro.</center>";
     } else {
-        $consulta = "INSERT INTO Usuario (idUsuario,Nombre, Correo, Contrasenia) VALUES ('$idUser','$nombre', '$correo', '$hass')";
+        $consulta = "INSERT INTO Usuario (Nombre, Correo, Contrasenia) VALUES ('$nombre', '$correo', '$hass')";
         $resultado = ejecuta_SQL($consulta);
         session_start();
        // Guarda el nombre de usuario en la sesión    
+        $_SESSION['user_id'] = $idUser;
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
         $extra = 'inicio.php';
