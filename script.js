@@ -66,24 +66,54 @@ function filterTableAdmin() {
 
 // Función para mostrar el formulario de añadir nuevo producto
 function showAddForm() {
-    document.getElementById('formTitle').innerText = "Nuevo Producto"; // Cambia el título del formulario
-    document.getElementById('formNumProducto').value = ''; // Limpia el campo oculto de ID de producto
-    document.getElementById('formNombre').value = ''; // Limpia el campo de nombre
-    document.getElementById('formDescripcion').value = ''; // Limpia el campo de descripción
-    document.getElementById('formPrecio').value = ''; // Limpia el campo de precio
-    document.getElementById('formCantidad').value = ''; // Limpia el campo de cantidad
-    document.getElementById('formContainer').style.display = 'block'; // Muestra el contenedor del formulario
+    document.getElementById('formTitle').innerText = 'Nuevo Producto';
+    document.getElementById('formNumProducto').value = '';
+    document.getElementById('formNombre').value = '';
+    document.getElementById('formDescripcion').value = '';
+    document.getElementById('formPrecio').value = '';
+    document.getElementById('formCantidad').value = '';
+    document.getElementById('formImagen').value = '';
+    document.getElementById('formContainer').style.display = 'block';
 }
 
-// Función para mostrar el formulario de edición de producto con valores precargados
-function showEditForm(id, nombre, descripcion, precio, cantidad) {
-    document.getElementById('formTitle').innerText = "Editar Producto"; // Cambia el título del formulario
-    document.getElementById('formNumProducto').value = id; // Rellena el campo oculto de ID de producto
-    document.getElementById('formNombre').value = nombre; // Rellena el campo de nombre
-    document.getElementById('formDescripcion').value = descripcion; // Rellena el campo de descripción
-    document.getElementById('formPrecio').value = precio; // Rellena el campo de precio
-    document.getElementById('formCantidad').value = cantidad; // Rellena el campo de cantidad
-    document.getElementById('formContainer').style.display = 'block'; // Muestra el contenedor del formulario
+function showEditForm(numProducto, nombre, descripcion, precio, cantidad, urlImagen) {
+    document.getElementById('formTitle').innerText = 'Editar Producto';
+    document.getElementById('formNumProducto').value = numProducto;
+    document.getElementById('formNombre').value = nombre;
+    document.getElementById('formDescripcion').value = descripcion;
+    document.getElementById('formPrecio').value = precio;
+    document.getElementById('formCantidad').value = cantidad;
+    if (urlImagen) {
+        document.getElementById('formImagen').type = 'text';
+        document.getElementById('formImagen').value = urlImagen;
+    } else {
+        document.getElementById('formImagen').type = 'file';
+    }
+    document.getElementById('formContainer').style.display = 'block';
+}
+
+function showAddMessageForm() {
+    document.getElementById('messageFormTitle').innerText = 'Nuevo Mensaje';
+    document.getElementById('messageFormId').value = '';
+    document.getElementById('messageFormDescripcion').value = '';
+    document.getElementById('messageFormCantidad').value = '';
+    document.getElementById('messageFormNombreProducto').value = '';
+    document.getElementById('messageFormDescripcionProducto').value = '';
+    document.getElementById('messageFormPrecioProducto').value = '';
+    document.getElementById('messageFormCantidadProducto').value = '';
+    document.getElementById('messageFormContainer').style.display = 'block';
+}
+
+function showEditMessageForm(mensajeId, descripcionMensaje, cantidadMensaje, nombreProductoMensaje, descripcionProductoMensaje, precioProductoMensaje, cantidadProductoMensaje) {
+    document.getElementById('messageFormTitle').innerText = 'Editar Mensaje';
+    document.getElementById('messageFormId').value = mensajeId;
+    document.getElementById('messageFormDescripcion').value = descripcionMensaje;
+    document.getElementById('messageFormCantidad').value = cantidadMensaje;
+    document.getElementById('messageFormNombreProducto').value = nombreProductoMensaje;
+    document.getElementById('messageFormDescripcionProducto').value = descripcionProductoMensaje;
+    document.getElementById('messageFormPrecioProducto').value = precioProductoMensaje;
+    document.getElementById('messageFormCantidadProducto').value = cantidadProductoMensaje;
+    document.getElementById('messageFormContainer').style.display = 'block';
 }
 
 // Función para filtrar la tabla de productos basada en el input de búsqueda

@@ -23,19 +23,26 @@ $idUser = $_SESSION['user_id'];
 
 // Si se envía un formulario de adición o edición
 if (isset($_POST['nombre']) && isset($_POST['correo']) && isset($_POST['contrasenia']) && isset($_POST['rol']) && isset($_POST['plan'])) {
-    $nombre = $_POST['nombre'];
-    $correo = $_POST['correo'];
-    $contrasenia = $_POST['contrasenia'];
-    $rol = $_POST['rol'];
-    $plan = $_POST['plan'];
+    $nombre = trim($_POST['nombre']);
+    $correo = trim($_POST['correo']);
+    $contrasenia = trim($_POST['contrasenia']);
+    $rol = trim($_POST['rol']);
+    $plan = trim($_POST['plan']);
     $id_usuario = isset($_POST['id_usuario']) ? $_POST['id_usuario'] : null;
+
+    if ($nombre == '' || $correo == '' || $contrasenia == '' || $rol == '' || $plan == '') {
+        die ("<BR><BR><center>Todos los campos son obligatorios.</center>");
+    }
+
+    // Hash de la contraseña
+    $hass = password_hash($contrasenia, PASSWORD_BCRYPT);
 
     if ($id_usuario) {
         // Actualizar usuario
-        $consulta_usuario = "UPDATE Usuario SET Nombre='$nombre', Correo='$correo', Contrasenia='$contrasenia', Rol='$rol', PlanAdquirido='$plan' WHERE idUsuario='$id_usuario'";
+        $consulta_usuario = "UPDATE Usuario SET Nombre='$nombre', Correo='$correo', Contrasenia='$hass', Rol='$rol', PlanAdquirido='$plan' WHERE idUsuario='$id_usuario'";
     } else {
         // Insertar nuevo usuario
-        $consulta_usuario = "INSERT INTO Usuario (Nombre, Correo, Contrasenia, Rol, PlanAdquirido) VALUES ('$nombre','$correo','$contrasenia','$rol','$plan')";
+        $consulta_usuario = "INSERT INTO Usuario (Nombre, Correo, Contrasenia, Rol, PlanAdquirido) VALUES ('$nombre','$correo','$hass','$rol','$plan')";
     }
     $resultado_usuario = ejecuta_SQL($consulta_usuario);
 
@@ -48,7 +55,11 @@ if (isset($_POST['nombre']) && isset($_POST['correo']) && isset($_POST['contrase
 if (isset($_GET['delete'])) {
     $id_usuario = $_GET['delete'];
 
-    // Eliminamos el usuario
+    // Eliminar primero los productos asociados al usuario
+    $consulta_productos = "DELETE FROM producto WHERE Usuario_ID = $id_usuario";
+    $resultado_productos = ejecuta_SQL($consulta_productos);
+
+    // Luego eliminar el usuario
     $consulta_usuario = "DELETE FROM Usuario WHERE idUsuario = $id_usuario";
     $resultado_usuario = ejecuta_SQL($consulta_usuario);
 
