@@ -683,7 +683,11 @@ ul.navbar-nav li.nav-item a.nav-link, ul.navbar-nav li.nav-item.active a.nav-lin
 a.navbar-brand img {
   max-width: 150px;
 }
-
+.main-menu {
+  padding-top: 3%;
+  padding-right: 4%;
+  font-size: 20px;
+}
 nav.main-menu ul {
   margin: 0;
   padding: 0;
@@ -825,7 +829,7 @@ nav.main-menu ul ul.sub-menu li {
 nav.main-menu ul ul.sub-menu li a {
   color: #555;
   padding: 8px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
 }
 

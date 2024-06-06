@@ -87,10 +87,28 @@ $resultado = ejecuta_SQL($consulta);
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body style="background: orange;">
-    <!-- Cabecera fija -->
-    <CENTER><h1>Gestión de Usuarios</h1></CENTER>
-    <!-- Buscador -->
-    <center>
+<div style="display: flex; justify-content: space-between;">
+  <h1 style="flex-grow: 1; text-align: center; padding-top: 15px;">StockMaster</h1>
+  <?php
+
+
+// Controlamos que la sesión sigue activa
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+// Manejo del cierre de sesión
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: index.html");
+    exit;
+}
+?>
+  <form method="post" action="">
+  <button type="submit" name="logout" class="btn btn-secondary" action="index.html">Logout</button>
+    </form>
+</div>
         <form>
             <input type="text" id="searchInput" placeholder="Buscar usuarios..." onkeyup="filterTableAdmin()">
         </form>
@@ -132,21 +150,11 @@ $resultado = ejecuta_SQL($consulta);
         echo "</table><br><center>";
         // Botón para agregar un nuevo usuario
         echo "<button onclick='showAddFormAdmin()' class='btn btn-success'>Nuevo usuario</button>";
-        echo '<form method="post" action="">
-                <center>
-                    <button type="submit" name="logout" class="btn btn-secondary">Logout</button>
-                </center>
-              </form>';
-        echo "</center>";
+       
     } else { // No hay ningún usuario
         echo "<br><br><center><h3>No hay usuarios que mostrar</h3><br><br>";
         echo "<button onclick='showAddFormAdmin()' class='btn btn-success'>Nuevo usuario</button>";
-        echo '<form method="post" action="">
-                <center>
-                    <button type="submit" name="logout" class="btn btn-secondary">Logout</button>
-                </center>
-              </form>';
-        echo "</center>";
+        
     }
     ?>
     </div>

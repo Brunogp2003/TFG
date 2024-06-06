@@ -46,3 +46,15 @@ CREATE TABLE Mensajes (
 INSERT INTO Mensajes (DescripcionMensaje, Cantidad) VALUES
 ('paco', 10, 1, 1), -- Se añaden 10 unidades del Producto1 por el Usuario1
 ('salida', 5, 2, 2);   -- Se retiran 5 unidades del Producto2 por el Usuario2
+
+CREATE TABLE Pagos (
+    idPago INT AUTO_INCREMENT PRIMARY KEY,
+    idUsuario INT NOT NULL,
+    idProducto INT NOT NULL,
+    tarjeta VARCHAR(20) NOT NULL,
+    cantidad DECIMAL(10, 2) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    detalles JSON,
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
+    FOREIGN KEY (idProducto) REFERENCES Producto(idProducto)
+);

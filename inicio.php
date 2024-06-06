@@ -12,18 +12,11 @@
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body style="background: orange;">
-    <!-- Cabecera fija -->
-    <CENTER><h1>Stocker</h1></CENTER>
-    <!-- Buscador -->
-    <center>
-        <form>
-            <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterTable()">
-        </form>
-    </center>
-    <br><br>
-    <div>
-    <?php
-require("funciones.php");
+    <!-- Cabecera fija --><br><br>
+    <div style="display: flex; justify-content: space-between;">
+  <h1 style="flex-grow: 1; text-align: center;">StockMaster</h1>
+  <?php
+  require("funciones.php");
 session_start();
 
 // Controlamos que la sesión sigue activa
@@ -35,7 +28,34 @@ if (!isset($_SESSION['user_id'])) {
 // Manejo del cierre de sesión
 if (isset($_POST['logout'])) {
     session_destroy();
+    header("Location: index.html");
+    exit;
+}
+?>
+  <form method="post" action="">
+  <button type="submit" name="logout" class="btn btn-secondary" action="index.html">Logout</button>
+    </form>
+</div>
+    <center>
+        <form>
+            <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterTable()">
+        </form>
+    </center>
+    <br><br>
+    <div>
+    <?php
+
+
+// Controlamos que la sesión sigue activa
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
+    exit;
+}
+
+// Manejo del cierre de sesión
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: index.html");
     exit;
 }
 
@@ -186,22 +206,12 @@ if ($resultado && $resultado->rowCount() > 0) {
             }
     echo "</table><br><center>";
     // Botón para agregar un nuevo producto
-    echo "<button onclick='showAddForm()' class='btn btn-success'>Nuevo producto</button>";
-    echo '<form method="post" action="">
-        <center>
-            <button type="submit" name="logout" class="btn btn-secondary">Logout</button>
-        </center>
-    </form><br><br>';
-    echo "</center>";
+    echo "<button onclick='showAddForm()' class='btn btn-success'>Nuevo producto</button> <br> <br>";
+    
 } else { // No hay ningún producto asociado al usuario
     echo "<br><br><center><h3>No hay productos que mostrar</h3><br><br>";
-    echo "<button onclick='showAddForm()' class='btn btn-success'>Nuevo producto</button>";
-    echo '<form method="post" action="">
-        <center>
-            <button type="submit" name="logout" class="btn btn-secondary">Logout</button>
-        </center>
-    </form>';
-    echo "</center>";
+    echo "<button onclick='showAddForm()' class='btn btn-success'>Nuevo producto</button> <br> <br>";
+
 }
 
 // Seleccionamos los mensajes asociados a este usuario
@@ -230,7 +240,6 @@ if ($resultado_mensajes && $resultado_mensajes->rowCount() > 0) {
                 <td align='left' class='messageQuantity'>&nbsp;&nbsp;$cantidadMensaje</td>
                 <td align='center'>
                     <button onclick='showEditMessageForm($mensajeId, \"$descripcionMensaje\", \"$cantidadMensaje\")' class='btn btn-primary'>Editar</button>
-                    <a href='mensaje.php?mensaje_id=$mensajeId' class='btn btn-info'>Ver</a>
                     <a href='?deleteMessage=$mensajeId' class='btn btn-danger'>Eliminar</a>
                 </td>";
     }
