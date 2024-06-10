@@ -83,12 +83,7 @@ function showEditForm(numProducto, nombre, descripcion, precio, cantidad, urlIma
     document.getElementById('formDescripcion').value = descripcion;
     document.getElementById('formPrecio').value = precio;
     document.getElementById('formCantidad').value = cantidad;
-    if (urlImagen) {
-        document.getElementById('formImagen').type = 'text';
-        document.getElementById('formImagen').value = urlImagen;
-    } else {
-        document.getElementById('formImagen').type = 'file';
-    }
+    document.getElementById('formImagen').type = 'file';
     document.getElementById('formContainer').style.display = 'block';
 }
 
@@ -104,15 +99,11 @@ function showAddMessageForm() {
     document.getElementById('messageFormContainer').style.display = 'block';
 }
 
-function showEditMessageForm(mensajeId, descripcionMensaje, cantidadMensaje, nombreProductoMensaje, descripcionProductoMensaje, precioProductoMensaje, cantidadProductoMensaje) {
+function showEditMessageForm(mensajeId, descripcionMensaje, cantidadMensaje) {
     document.getElementById('messageFormTitle').innerText = 'Editar Mensaje';
     document.getElementById('messageFormId').value = mensajeId;
     document.getElementById('messageFormDescripcion').value = descripcionMensaje;
     document.getElementById('messageFormCantidad').value = cantidadMensaje;
-    document.getElementById('messageFormNombreProducto').value = nombreProductoMensaje;
-    document.getElementById('messageFormDescripcionProducto').value = descripcionProductoMensaje;
-    document.getElementById('messageFormPrecioProducto').value = precioProductoMensaje;
-    document.getElementById('messageFormCantidadProducto').value = cantidadProductoMensaje;
     document.getElementById('messageFormContainer').style.display = 'block';
 }
 

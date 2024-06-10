@@ -111,49 +111,50 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta sint dignissimos, rem commodi cum voluptatem quae reprehenderit repudiandae ea tempora incidunt ipsa, quisquam animi perferendis eos eum modi! Tempora, earum.</p>
 						<div id="paypal-button-container" style="width: 300px;margin: 0 auto;text-align: center;"></div>
 						<script src="https://www.paypal.com/sdk/js?client-id=AaMgH_nCtPyTOCUM7b-dFyotH_3Sxm4FduKqKUvgwkuLU74kgMPHFzglMwg27CsmRoJ2b4P2emzuPx5H"></script>
-						<script>
-							paypal.Buttons({
-								style: {
-									color: 'blue',
-									shape: 'pill',
-									label: 'pay'
-								},
-								createOrder: function(data, actions) {
-									return actions.order.create({
-										purchase_units: [{
-											amount: {
-												value: "<?php echo $total; ?>"
-											}
-										}]
-									});
-								},
-								onApprove: function(data, actions) {
-									var url = 'login.php';
-									return actions.order.capture().then(function(detalles) {
-										console.log(detalles);
-										return fetch(url, {
-											method: 'POST',
-											headers: {
-												'content-type': 'application/json'
-											},
-											body: JSON.stringify({
-												detalles: detalles
-											})
-										});
-									}).then(function(response) {
-										window.location.href = 'login.php';
-									});
-								},
-								onCancel: function(data) {
-									Swal.fire({
-										icon: 'error',
-										title: 'Pago Cancelado',
-										showConfirmButton: false,
-										timer: 1500
-									});
-								}
-							}).render('#paypal-button-container');
-							</script>
+                        <script>
+                            paypal.Buttons({
+                                style: {
+                                    color: 'blue',
+                                    shape: 'pill',
+                                    label: 'pay'
+                                },
+                                createOrder: function(data, actions) {
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: {
+                                                value: 75
+                                            }
+                                        }]
+                                    });
+                                },
+                                onApprove: function(data, actions) {
+                                    var url = 'save_payment.php'; // Actualizar con la ruta del archivo PHP
+                                    return actions.order.capture().then(function(detalles) {
+                                        console.log(detalles);
+                                        return fetch(url, {
+                                            method: 'POST',
+                                            headers: {
+                                                'content-type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                detalles: detalles
+                                            })
+                                        });
+                                    }).then(function(response) {
+                                        if(response.ok) {
+                                            window.location.href = 'success.html'; // Redirigir a una página de éxito
+                                        } else {
+                                            alert('Hubo un problema al procesar el pago.');
+                                        }
+                                    }).catch(function(error) {
+                                        console.error('Error:', error);
+                                    });
+                                },
+                                onCancel: function(data) {
+                                    console.log(data);
+                                }
+                            }).render('#paypal-button-container');
+                        </script>
 					</div>
 				</div>
 			</div>

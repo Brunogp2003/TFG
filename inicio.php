@@ -12,30 +12,31 @@
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body style="background: orange;">
-    <!-- Cabecera fija --><br><br>
+    <!-- Cabecera fija -->
+    <br><br>
     <div style="display: flex; justify-content: space-between;">
-  <h1 style="flex-grow: 1; text-align: center;">StockMaster</h1>
-  <?php
-  require("funciones.php");
-session_start();
+        <h1 style="flex-grow: 1; text-align: center;">StockMaster</h1>
+        <?php
+        require("funciones.php");
+        session_start();
 
-// Controlamos que la sesión sigue activa
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+        // Controlamos que la sesión sigue activa
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: login.php");
+            exit;
+        }
 
-// Manejo del cierre de sesión
-if (isset($_POST['logout'])) {
-    session_destroy();
-    header("Location: index.html");
-    exit;
-}
-?>
-  <form method="post" action="">
-  <button type="submit" name="logout" class="btn btn-secondary" action="index.html">Logout</button>
-    </form>
-</div>
+        // Manejo del cierre de sesión
+        if (isset($_POST['logout'])) {
+            session_destroy();
+            header("Location: index.html");
+            exit;
+        }
+        ?>
+        <form method="post" action="">
+            <button type="submit" name="logout" class="btn btn-secondary" action="index.html">Logout</button>
+        </form>
+    </div>
     <center>
         <form>
             <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterTable()">
@@ -45,20 +46,6 @@ if (isset($_POST['logout'])) {
     <div>
     <?php
 
-
-// Controlamos que la sesión sigue activa
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
-
-// Manejo del cierre de sesión
-if (isset($_POST['logout'])) {
-    session_destroy();
-    header("Location: index.html");
-    exit;
-}
-
 // Conexión a la base de datos
 conectar_BD();
 
@@ -66,7 +53,7 @@ conectar_BD();
 $idUser = $_SESSION['user_id'];
 
 // Manejo del formulario de producto
-if (isset($_POST['nombre']) && isset($_POST['descr']) && isset($_POST['precio']) && isset($_POST['cantidad']) && isset($_FILES['imagen'])) {
+if (isset($_POST['nombre']) && isset($_POST['descr']) && isset($_POST['precio']) && isset($_POST['cantidad'])) {
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['descr'];
     $precio = $_POST['precio'];
@@ -75,7 +62,7 @@ if (isset($_POST['nombre']) && isset($_POST['descr']) && isset($_POST['precio'])
 
     // Manejo de la imagen
     $urlImagen = null;
-    if ($_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['imagen']['tmp_name'];
         $fileName = $_FILES['imagen']['name'];
         $fileNameCmps = explode(".", $fileName);
@@ -115,20 +102,32 @@ if (isset($_POST['nombre']) && isset($_POST['descr']) && isset($_POST['precio'])
         // Insertar nuevo producto
         $consulta_producto = "INSERT INTO Producto (Nombre, Descripcion, Precio, CantidadEnStock, UrlImagen, Usuario_ID) VALUES ('$nombre','$descripcion','$precio','$cantidad', '$urlImagen', $idUser)";
     }
+
+    // Ejecutar la consulta y verificar el resultado
     $resultado_producto = ejecuta_SQL($consulta_producto);
 
-    // Redirigir a la página del producto actual
-    header("Location: inicio.php");
-    exit();
+    if ($resultado_producto) {
+        // Redirigir a la página del producto actual
+        header("Location: inicio.php");
+        exit();
+    } else {
+        echo "Error al guardar el producto en la base de datos.";
+    }
 }
 
 if (isset($_POST['descripcionMensaje']) && isset($_POST['cantidadMensaje'])) {
     // Recuperar los valores del formulario
     $descripcionMensaje = $_POST['descripcionMensaje'];
     $cantidadMensaje = $_POST['cantidadMensaje'];
+    $mensajeId = isset($_POST['mensajeId']) ? $_POST['mensajeId'] : null;
 
-    // Consulta SQL para insertar un nuevo mensaje
-    $consulta_mensaje = "INSERT INTO Mensajes (DescripcionMensaje, Cantidad, Usuario_ID) VALUES ('$descripcionMensaje', '$cantidadMensaje', '$idUser')";
+    if ($mensajeId) {
+        // Actualizar mensaje
+        $consulta_mensaje = "UPDATE Mensajes SET DescripcionMensaje='$descripcionMensaje', Cantidad='$cantidadMensaje' WHERE idMensaje='$mensajeId' AND Usuario_ID='$idUser'";
+    } else {
+        // Insertar nuevo mensaje
+        $consulta_mensaje = "INSERT INTO Mensajes (DescripcionMensaje, Cantidad, Usuario_ID) VALUES ('$descripcionMensaje', '$cantidadMensaje', '$idUser')";
+    }
 
     // Ejecutar la consulta SQL
     $resultado_mensaje = ejecuta_SQL($consulta_mensaje);
@@ -143,7 +142,6 @@ if (isset($_POST['descripcionMensaje']) && isset($_POST['cantidadMensaje'])) {
         echo "Error al guardar el mensaje en la base de datos.";
     }
 }
-
 
 // Si se envía una solicitud de eliminación de producto
 if (isset($_GET['delete'])) {
@@ -184,34 +182,33 @@ if ($resultado && $resultado->rowCount() > 0) {
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Cantidad en Stock</font></th>
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Operaciones</font></th>
             </tr>";
-            foreach ($resultado as $row) {    
-                // Guardamos los valores en variables
-                $numProducto = $row['idProducto'];
-                $nombreProducto = $row['Nombre'];
-                $descripcion = $row['Descripcion'];
-                $precio = $row['Precio'];
-                $cantidad = $row['CantidadEnStock'];
-                $urlImagen = $row['UrlImagen'];
-                // Imprimimos los datos en la tabla
-                echo "<tr class='productRow'>
-                        <td align='center' class='productName'>$nombreProducto</td>
-                        <td align='left' class='productDescription'>&nbsp;&nbsp;$descripcion</td>
-                        <td align='left' class='productPrice'>&nbsp;&nbsp;$precio</td>
-                        <td align='center'>$cantidad</td>
-                        <td align='center'>
-                            <button onclick='showEditForm($numProducto, \"$nombreProducto\", \"$descripcion\", \"$precio\", \"$cantidad\", \"$urlImagen\")' class='btn btn-primary'>Editar</button>
-                            <a href='producto.php?num_producto=$numProducto' class='btn btn-info'>Ver</a>
-                            <a href='?delete=$numProducto' class='btn btn-danger'>Eliminar</a>
-                        </td>";
-            }
+    foreach ($resultado as $row) {
+        // Guardamos los valores en variables
+        $numProducto = $row['idProducto'];
+        $nombreProducto = $row['Nombre'];
+        $descripcion = $row['Descripcion'];
+        $precio = $row['Precio'];
+        $cantidad = $row['CantidadEnStock'];
+        $urlImagen = $row['UrlImagen'];
+        // Imprimimos los datos en la tabla
+        echo "<tr class='productRow'>
+                <td align='center' class='productName'>$nombreProducto</td>
+                <td align='left' class='productDescription'>&nbsp;&nbsp;$descripcion</td>
+                <td align='left' class='productPrice'>&nbsp;&nbsp;$precio</td>
+                <td align='center'>$cantidad</td>
+                <td align='center'>
+                    <button onclick='showEditForm($numProducto, \"$nombreProducto\", \"$descripcion\", \"$precio\", \"$cantidad\", \"$urlImagen\")' class='btn btn-primary'>Editar</button>
+                    <a href='producto.php?num_producto=$numProducto' class='btn btn-info'>Ver</a>
+                    <a href='?delete=$numProducto' class='btn btn-danger'>Eliminar</a>
+                </td>";
+    }
     echo "</table><br><center>";
     // Botón para agregar un nuevo producto
     echo "<button onclick='showAddForm()' class='btn btn-success'>Nuevo producto</button> <br> <br>";
-    
+
 } else { // No hay ningún producto asociado al usuario
     echo "<br><br><center><h3>No hay productos que mostrar</h3><br><br>";
     echo "<button onclick='showAddForm()' class='btn btn-success'>Nuevo producto</button> <br> <br>";
-
 }
 
 // Seleccionamos los mensajes asociados a este usuario
@@ -221,116 +218,97 @@ $resultado_mensajes = ejecuta_SQL($consulta);
 // Verificamos si hay mensajes asociados al usuario
 if ($resultado_mensajes && $resultado_mensajes->rowCount() > 0) {
     echo "<table id='messageTable' BORDER='0' cellspacing='1' cellpadding='1' width='80%' align='center'>
-            <tr><th bgcolor='black'><font color='white' face='arial, helvetica'>Fecha y Hora</font></th>
+            <tr><th bgcolor='black'><font color='white' face='arial, helvetica'>Fecha/Hora</font></th>
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Descripción</font></th>
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Cantidad</font></th>
                 <th bgcolor='black'><font color='white' face='arial, helvetica'>Operaciones</font></th>
             </tr>";
-    foreach ($resultado_mensajes as $row) {    
+    foreach ($resultado_mensajes as $row) {
         // Guardamos los valores en variables
-        $mensajeId = $row['idMensaje'];
+        $idMensaje = $row['idMensaje'];
         $fechaHora = $row['FechaHora'];
         $descripcionMensaje = $row['DescripcionMensaje'];
         $cantidadMensaje = $row['Cantidad'];
-
         // Imprimimos los datos en la tabla
         echo "<tr class='messageRow'>
-                <td align='center' class='messageDate'>$fechaHora</td>
-                <td align='left' class='messageDescription'>&nbsp;&nbsp;$descripcionMensaje</td>
-                <td align='left' class='messageQuantity'>&nbsp;&nbsp;$cantidadMensaje</td>
+                <td align='center'>$fechaHora</td>
+                <td align='left'>&nbsp;&nbsp;$descripcionMensaje</td>
+                <td align='left'>&nbsp;&nbsp;$cantidadMensaje</td>
                 <td align='center'>
-                    <button onclick='showEditMessageForm($mensajeId, \"$descripcionMensaje\", \"$cantidadMensaje\")' class='btn btn-primary'>Editar</button>
-                    <a href='?deleteMessage=$mensajeId' class='btn btn-danger'>Eliminar</a>
+                    <button onclick='showEditMessageForm($idMensaje, \"$descripcionMensaje\", \"$cantidadMensaje\")' class='btn btn-primary'>Editar</button>
+                    <a href='?deleteMessage=$idMensaje' class='btn btn-danger'>Eliminar</a>
                 </td>";
     }
     echo "</table><br><center>";
     // Botón para agregar un nuevo mensaje
-    echo "<button onclick='showAddMessageForm()' class='btn btn-success'>Nuevo mensaje</button>";
-    echo "</center>";
+    echo "<button onclick='showAddMessageForm()' class='btn btn-success'>Nuevo mensaje</button> <br> <br>";
+
 } else { // No hay ningún mensaje asociado al usuario
     echo "<br><br><center><h3>No hay mensajes que mostrar</h3><br><br>";
-    echo "<button onclick='showAddMessageForm()' class='btn btn-success'>Nuevo mensaje</button>";
-    echo "</center>";
+    echo "<button onclick='showAddMessageForm()' class='btn btn-success'>Nuevo mensaje</button> <br> <br>";
 }
 ?>
-
     </div>
 
     <!-- Formulario de Edición y Adición de Productos -->
     <br>
     <div id="formContainer" style="display:none;">
-    <center><h3 id="formTitle">Nuevo Producto</h3></center>
-    <form id="productForm" method="post" action="" enctype="multipart/form-data">
-        <input type="hidden" name="num_producto" id="formNumProducto">
-        <table align='center'>
-            <tr>
-                <td>Nombre:</td>
-                <td><input type='text' name='nombre' id='formNombre' size='20' maxlength='30'></td>
-            </tr>
-            <tr>
-                <td>Descripción:</td>
-                <td><input type='text' name='descr' id='formDescripcion' size='12' maxlength='20'></td>
-            </tr>
-            <tr>
-                <td>Precio:</td>
-                <td><input type='text' name='precio' id='formPrecio' size='12' maxlength='12'></td>
-            </tr>
-            <tr>
-                <td>Cantidad:</td>
-                <td><input type='text' name='cantidad' id='formCantidad' size='20' maxlength='30'></td>
-            </tr>
-            <tr>
-                <td>Imagen:</td>
-                <td><input type='file' name='imagen' id='formImagen'></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center">
-                    <input type="submit" value="Guardar Cambios" class="btn btn-primary">
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
+        <center><h3 id="formTitle">Nuevo Producto</h3></center>
+        <form id="productForm" method="post" action="" enctype="multipart/form-data">
+            <input type="hidden" name="num_producto" id="formNumProducto">
+            <table align='center'>
+                <tr>
+                    <td>Nombre:</td>
+                    <td><input type='text' name='nombre' id='formNombre' size='20' ></td>
+                </tr>
+                <tr>
+                    <td>Descripción:</td>
+                    <td><input type='text' name='descr' id='formDescripcion' size='12' ></td>
+                </tr>
+                <tr>
+                    <td>Precio:</td>
+                    <td><input type='text' name='precio' id='formPrecio' size='12' ></td>
+                </tr>
+                <tr>
+                    <td>Cantidad:</td>
+                    <td><input type='text' name='cantidad' id='formCantidad' size='20' ></td>
+                </tr>
+                <tr>
+                    <td>Imagen:</td>
+                    <td><input type='file' name='imagen' id='formImagen'></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="submit" value="Guardar Cambios" class="btn btn-primary">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 
-<!-- Formulario de Edición y Adición de Mensajes -->
-<br>
-<div id="messageFormContainer" style="display:none;">
-    <center><h3 id="messageFormTitle">Nuevo Mensaje</h3></center>
-    <form id="messageForm" method="post" action="">
-        <input type="hidden" name="mensajeId" id="messageFormId">
-        <table align='center'>
-            <tr>
-                <td>Descripción del Mensaje:</td>
-                <td><input type='text' name='descripcionMensaje' id='messageFormDescripcion' size='20' maxlength='200'></td>
-            </tr>
-            <tr>
-                <td>Cantidad del Mensaje:</td>
-                <td><input type='text' name='cantidadMensaje' id='messageFormCantidad' size='12' maxlength='12'></td>
-            </tr>
-            <tr>
-                <td>Nombre del Producto:</td>
-                <td><input type='text' name='nombreProductoMensaje' id='messageFormNombreProducto' size='12' maxlength='100'></td>
-            </tr>
-            <tr>
-                <td>Descripción del Producto:</td>
-                <td><input type='text' name='descripcionProductoMensaje' id='messageFormDescripcionProducto' size='12' maxlength='200'></td>
-            </tr>
-            <tr>
-                <td>Precio del Producto:</td>
-                <td><input type='text' name='precioProductoMensaje' id='messageFormPrecioProducto' size='12' maxlength='12'></td>
-            </tr>
-            <tr>
-                <td>Cantidad del Producto:</td>
-                <td><input type='text' name='cantidadProductoMensaje' id='messageFormCantidadProducto' size='12' maxlength='12'></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center">
-                    <input type="submit" value="Guardar Cambios" class="btn btn-primary">
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
+    <!-- Formulario de Edición y Adición de Mensajes -->
+    <br>
+    <div id="messageFormContainer" style="display:none;">
+        <center><h3 id="messageFormTitle">Nuevo Mensaje</h3></center>
+        <form id="messageForm" method="post" action="">
+            <input type="hidden" name="mensajeId" id="messageFormId">
+            <table align='center'>
+                <tr>
+                    <td>Descripción del Mensaje:</td>
+                    <td><input type='text' name='descripcionMensaje' id='messageFormDescripcion' size='20' '></td>
+                </tr>
+                <tr>
+                    <td>Cantidad del Mensaje:</td>
+                    <td><input type='text' name='cantidadMensaje' id='messageFormCantidad' size='12' ></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="submit" value="Guardar Cambios" class="btn btn-primary">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 
     <script src="script.js"></script>
 </body>

@@ -86,41 +86,49 @@ $svg = $generator->render_svg("qr", $currentUrl, "");
     <link rel="stylesheet" href="assets/css/responsive.css">
     <style>
         .product-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background: #fff;
-            padding-top: 100px;
-        }
-        .product-content {
-            display: flex;
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-        }
-        .product-image {
-            max-width: 500px;
-            margin-right: 20px;
-        }
-        .product-details {
-            flex-grow: 1;
-            text-align: left;
-        }
-        .product-price {
-            font-size: 2em;
-            color: green;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .product-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    padding-top: 100px;
+}
+
+.product-content {
+    display: flex;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    max-width: 1200px; /* Ajustar el tamaño máximo del contenedor */
+}
+
+.product-image {
+    flex: 1;
+    max-width: 100%; /* Asegura que la imagen no exceda el tamaño del contenedor */
+    margin-right: 20px;
+}
+
+.product-details {
+    flex: 1;
+    text-align: left;
+}
+
+.product-price {
+    font-size: 2em;
+    color: green;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.product-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
     </style>
 </head>
 <body style ="background-color: orange;">
