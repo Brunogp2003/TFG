@@ -119,13 +119,13 @@
                                     return actions.order.create({
                                         purchase_units: [{
                                             amount: {
-                                                value: 0
+                                                value: 1
                                             }
                                         }]
                                     });
                                 },
                                 onApprove: function(data, actions) {
-                                    var url = 'save_payment.php'; // Actualizar con la ruta del archivo PHP
+                                    var url = 'login.php'; // Actualizar con la ruta del archivo PHP
                                     return actions.order.capture().then(function(detalles) {
                                         console.log(detalles);
                                         return fetch(url, {
@@ -138,11 +138,7 @@
                                             })
                                         });
                                     }).then(function(response) {
-                                        if(response.ok) {
-                                            window.location.href = 'success.html'; // Redirigir a una página de éxito
-                                        } else {
-                                            alert('Hubo un problema al procesar el pago.');
-                                        }
+										window.location.href = 'login.php';
                                     }).catch(function(error) {
                                         console.error('Error:', error);
                                     });

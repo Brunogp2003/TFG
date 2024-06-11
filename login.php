@@ -23,6 +23,7 @@
             <div>
               <span style="width:48%; text-align:left; display: inline-block;"><a id="nocuenta" class="small-text" href="#">No tengo cuenta</a></span>
               <span style="width:50%; text-align:right; display: inline-block;"><input type="submit" name="login" value="Iniciar sesion"></span>
+              
             </div>
           </fieldset>
           <div class="clearfix"></div>
@@ -86,7 +87,7 @@ if (isset($_POST['login'])) {
         header("Location: http://$host$uri/$extra");
         exit();
       } else {
-          echo "<BR><BR>El usuario o la contraseña no son correctos<br><br>";
+          echo "El usuario o la contraseña no son correctos<br><br>";
       }
   } else {
       echo "<BR><BR>El usuario o la contraseña no son correctos<br><br>";
@@ -95,31 +96,40 @@ if (isset($_POST['login'])) {
 
 // Comprobación y manejo del registro de usuario
 if (isset($_POST['register'])) {
-    $nombre = trim($_POST['nombre']);
-    $correo = trim($_POST['email']);
-    $passw = trim($_POST['password']);
-    $hass = password_hash($passw, PASSWORD_BCRYPT);
-    conectar_BD();
-    if (($nombre == '') or ($correo == '') or ($passw == '')) {
-        die ("<BR><BR><center>El nombre/email/password no deben ser vacíos. Elija otro.</center>");
-    }
-    $consulta = "SELECT Nombre, Correo FROM Usuario WHERE Nombre='$nombre' OR Correo='$correo'";
-    $resultado = ejecuta_SQL($consulta);
-    if ($resultado->rowCount() > 0) {
-        echo "<BR><BR><center>El usuario ya se encuentra registrado. Elija otro.</center>";
-    } else {
-        $consulta = "INSERT INTO Usuario (Nombre, Correo, Contrasenia) VALUES ('$nombre', '$correo', '$hass')";
-        $resultado = ejecuta_SQL($consulta);
-        session_start();
-       // Guarda el nombre de usuario en la sesión    
-        $_SESSION['user_id'] = $idUser;
-        $host = $_SERVER['HTTP_HOST'];
-        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-        $extra = 'inicio.php';
-        header("Location: http://$host$uri/$extra");
-        exit();    
-    }
+  $nombre = trim($_POST['nombre']);
+  $correo = trim($_POST['email']);
+  $passw = trim($_POST['password']);
+  $hass = password_hash($passw, PASSWORD_BCRYPT);
+  conectar_BD();
+  if (($nombre == '') or ($correo == '') or ($passw == '')) {
+      die ("<BR><BR><center>El nombre/email/password no deben ser vacíos. Elija otro.</center>");
+  }
+  $consulta = "SELECT Nombre, Correo FROM Usuario WHERE Nombre='$nombre' OR Correo='$correo'";
+  $resultado = ejecuta_SQL($consulta);
+  if ($resultado->rowCount() > 0) {
+      echo "<BR><BR><center>El usuario ya se encuentra registrado. Elija otro.</center>";
+  } else {
+      // Verificar si el nombre de usuario ya existe en la base de datos
+      $consulta_existencia = "SELECT Nombre FROM Usuario WHERE Nombre='$nombre'";
+      $resultado_existencia = ejecuta_SQL($consulta_existencia);
+      if ($resultado_existencia->rowCount() > 0) {
+          echo "<BR><BR><center>El nombre de usuario ya está ocupado. Elija otro.</center>";
+      } else {
+          // Insertar el nuevo usuario si el nombre no está ocupado
+          $consulta = "INSERT INTO Usuario (Nombre, Correo, Contrasenia, Rol) VALUES ('$nombre', '$correo', '$hass','user')";
+          $resultado = ejecuta_SQL($consulta);
+          session_start();
+          // Guarda el nombre de usuario en la sesión    
+          $_SESSION['user_id'] = $idUser;
+          $host = $_SERVER['HTTP_HOST'];
+          $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+          $extra = 'inicio.php';
+          header("Location: http://$host$uri/$extra");
+          exit();
+      }
+  }
 }
+
 ?>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
