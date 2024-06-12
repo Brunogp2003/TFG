@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
 document.getElementById("searchInput").addEventListener("keyup", filterTable); // Añadir evento de búsqueda
 });
 
+//Muestra el formulario para añadir un usuario totalmente vacío
 function showAddFormAdmin() {
     document.getElementById('formTitle').innerText = "Nuevo Usuario";
     document.getElementById('formIdUsuario').value = "";
@@ -31,7 +32,7 @@ function showAddFormAdmin() {
     document.getElementById('formPlan').value = "";
     document.getElementById('formContainer').style.display = "block";
 }
-
+//Muestra el formulario para editar un usuario con los datos del usuario que va a ser editado
 function showEditFormAdmin(id, nombre, correo, contrasenia, rol, plan) {
     document.getElementById('formTitle').innerText = "Editar Usuario";
     document.getElementById('formIdUsuario').value = id;
@@ -42,7 +43,7 @@ function showEditFormAdmin(id, nombre, correo, contrasenia, rol, plan) {
     document.getElementById('formPlan').value = plan;
     document.getElementById('formContainer').style.display = "block";
 }
-
+//Sirve para buscar los usuarios en el buscador
 function filterTableAdmin() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("searchInput");
@@ -64,7 +65,7 @@ function filterTableAdmin() {
     }
 }
 
-// Función para mostrar el formulario de añadir nuevo producto
+// Función para mostrar el formulario de añadir nuevo producto con el formulario totalmente vacío
 function showAddForm() {
     document.getElementById('formTitle').innerText = 'Nuevo Producto';
     document.getElementById('formNumProducto').value = '';
@@ -75,7 +76,7 @@ function showAddForm() {
     document.getElementById('formImagen').value = '';
     document.getElementById('formContainer').style.display = 'block';
 }
-
+// Función para mostrar el formulario de editar un producto con los datos del producto que va a ser editado
 function showEditForm(numProducto, nombre, descripcion, precio, cantidad, urlImagen) {
     document.getElementById('formTitle').innerText = 'Editar Producto';
     document.getElementById('formNumProducto').value = numProducto;
@@ -86,7 +87,7 @@ function showEditForm(numProducto, nombre, descripcion, precio, cantidad, urlIma
     document.getElementById('formImagen').type = 'file';
     document.getElementById('formContainer').style.display = 'block';
 }
-
+// Función para mostrar el formulario de añadir nuevo mensaje con el formulario totalmente vacío
 function showAddMessageForm() {
     document.getElementById('messageFormTitle').innerText = 'Nuevo Mensaje';
     document.getElementById('messageFormId').value = '';
@@ -98,7 +99,7 @@ function showAddMessageForm() {
     document.getElementById('messageFormCantidadProducto').value = '';
     document.getElementById('messageFormContainer').style.display = 'block';
 }
-
+// Función para mostrar el formulario de editar un mensaje con los datos del mensaje que va a ser editado
 function showEditMessageForm(mensajeId, descripcionMensaje, cantidadMensaje) {
     document.getElementById('messageFormTitle').innerText = 'Editar Mensaje';
     document.getElementById('messageFormId').value = mensajeId;
