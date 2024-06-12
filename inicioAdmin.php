@@ -82,6 +82,8 @@ $resultado = ejecuta_SQL($consulta);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Gestión de Usuarios">
     <title>Gestión de Usuarios</title>
+    <!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="assets/img/logo.png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/responsive.css">

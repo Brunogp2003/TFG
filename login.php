@@ -39,6 +39,7 @@
             <p><span class="fa fa-envelope"></span><input type="email" name="email" placeholder="Email" required></p>
             <p><span class="fa fa-lock"></span><input type="password" name="password" placeholder="Password" required></p>
             <div>
+              
               <span style="width:48%; text-align:left; display: inline-block;"><a id="cuenta" class="small-text" href="#">Tengo una cuenta</a></span>
               <span style="width:50%; text-align:right; display: inline-block;"><input type="submit" name="register" value="Registrarse"></span>
             </div>
@@ -68,7 +69,7 @@ if (isset($_POST['login'])) {
       foreach ($matriz as $myrow) {    
         // Guarda los valores de myrow con variables
         list($idUser, $nombre, $password, $rol) = $myrow;
-      }
+      } //Comprobamos las passwords hasheadas y que el rol sea user
       if (password_verify($passw, $password) && $rol == "user" ) {
         session_start();
         $_SESSION['user_id'] = $idUser;
@@ -77,7 +78,7 @@ if (isset($_POST['login'])) {
         $extra = "inicio.php"; 
         header("Location: http://$host$uri/$extra");
         exit();
-    
+        //Comprobamos las passwords hasheadas y que el rol sea admin
       } elseif (password_verify($passw, $password) && $rol == "admin")  {
         session_start();
         $_SESSION['user_id'] = $idUser;

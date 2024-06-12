@@ -10,34 +10,18 @@
    $DBPass="";
    $DB="inventary";
    $id_conexion=-1;
-
-   function imprimir_cabecera()
-   {
-      echo "<HTML><HEAD><TITLE>Foro de mensajes</TITLE></HEAD>
-         <BODY bgcolor='orange' >
-         <TABLE bgcolor='black' border='0' align='center' cellspacing='3' cellpadding='3' width='100%'>
-         <TR><TH colspan='5' width='100%' bgcolor='black'>
-            &nbsp;<FONT size='6' color='orange' face='arial, helvetica'>FORO DE MENSAJES</FONT>&nbsp
-         </TH></TR>
-         </TABLE>";
-   } 
-   function imprimir_footer() 
-   {
-      boton_ficticio("Logout", "index.php?logout");
-            
-
-   }
+   //Boton para logout
    function boton_logut($caption,$url,$name)
    {
-      if (isset($_POST['logout'])) {
-         session_destroy();
-         header("Location: index.html");
+      if (isset($_POST['logout'])) { //Si se le clica
+         session_destroy(); //Destruye la sesion
+         header("Location: index.html"); //Manda para el index.html
          exit;
      }
       return "<a href = '$url' name= '$name' class='btn btn-primary'>$caption</A>";
 
    } 
-
+   
    function boton_ficticio($caption,$url)
    {
       return "<a href = '$url' class='btn btn-primary'>$caption</A>";
@@ -49,7 +33,7 @@
       return "<a href = '$url' class='btn btn-danger'>$caption</A>";
 
    }
-
+   //Sirve para conectar la base de datos
    function conectar_BD() 
    {
       global $DBHost, $DBUser, $DBPass, $DB, $id_conexion;
@@ -64,7 +48,7 @@
          servidor de bases de datos MySQL.</H3></p>\n <p>Error: " . $e->getMessage() . "</p>\n");
       } 
    }
-
+   //Para ejecutar las consultas
    function ejecuta_SQL($sql) 
    {
       global $id_conexion;

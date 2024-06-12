@@ -122,36 +122,4 @@ function filterTable() {
             row.style.display = "none"; // Ocultar la fila si no coincide
         }
     });
-}
-
-// Asegurarse de que el DOM esté completamente cargado antes de añadir el evento para el input de búsqueda
-document.addEventListener("DOMContentLoaded", function() {
-    let searchInput = document.getElementById('searchInput'); // Input de búsqueda
-    let productTable = document.getElementById('productTable'); // Tabla de productos
-  
-    // Evento para filtrar la tabla de productos mientras se escribe en el input de búsqueda
-    searchInput.addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase(); // Valor del input en minúsculas
-        let rows = productTable.getElementsByClassName('productRow'); // Todas las filas de la tabla de productos
-  
-        // Iterar sobre todas las filas de la tabla
-        for (let i = 0; i < rows.length; i++) {
-            let nameCell = rows[i].getElementsByClassName('productName')[0]; // Celda del nombre del producto
-            let descCell = rows[i].getElementsByClassName('productDescription')[0]; // Celda de la descripción del producto
-            let priceCell = rows[i].getElementsByClassName('productPrice')[0]; // Celda del precio del producto
-  
-            let nameText = nameCell.textContent || nameCell.innerText; // Texto del nombre del producto
-            let descText = descCell.textContent || descCell.innerText; // Texto de la descripción del producto
-            let priceText = priceCell.textContent || priceCell.innerText; // Texto del precio del producto
-  
-            // Mostrar la fila si coincide el nombre, descripción o precio del producto con el filtro
-            if (nameText.toLowerCase().indexOf(filter) > -1 || 
-                descText.toLowerCase().indexOf(filter) > -1 ||
-                priceText.toLowerCase().indexOf(filter) > -1) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }
-    });
-});
+};
